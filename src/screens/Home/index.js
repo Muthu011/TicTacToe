@@ -46,7 +46,7 @@ const Home = () => {
 
   const onPress = (rowIndex, columnIndex) => {
     if (gameMap[rowIndex][columnIndex] !== '') {
-      Alert.alert('position already occupied');
+      Alert.alert('Position Already Occupied');
       return;
     }
 
@@ -70,7 +70,7 @@ const Home = () => {
   };
 
   const gameWon = player => {
-    Alert.alert('Hurray', `player ${player} won`, [
+    Alert.alert('Hurray', `Player ${player.toUpperCase()} won`, [
       {text: 'Restart', onPress: onClickReset},
     ]);
   };
@@ -211,19 +211,20 @@ const Home = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <TouchableOpacity
-        style={{justifyContent: 'flex-end'}}
-        onPress={onClickReset}>
+      <TouchableOpacity onPress={onClickReset}>
         <View
-          style={{
-            width: 90,
-            height: 50,
-            borderWidth: 4,
-            backgroundColor: 'red',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-          <Text>Reset</Text>
+          style={[
+            {
+              backgroundColor: '#4F5686',
+              width: 120,
+              height: 40,
+              justifyContent: 'center',
+              alignItems: 'center',
+            },
+          ]}>
+          <Text style={{fontSize: 16, color: '#fff', fontWeight: '600'}}>
+            Reset
+          </Text>
         </View>
       </TouchableOpacity>
       <ImageBackground
