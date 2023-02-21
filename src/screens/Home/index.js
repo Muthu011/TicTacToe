@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
   ImageBackground,
   SafeAreaView,
@@ -12,6 +12,8 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import Cell from '../../components/Cell';
+import Confetti from 'react-native-confetti';
+
 const Home = () => {
   const [gameMap, setGameMap] = useState([
     ['', '', ''],
@@ -21,6 +23,7 @@ const Home = () => {
   const [gameMode, setGameMode] = useState('BOT_MEDIUM'); // LOCAL, BOT_EASY, BOT_MEDIUM;
 
   const [currentTurn, setCurrentTurn] = useState('x');
+  const confettiRef = useRef();
 
   useEffect(() => {
     setTimeout(() => {
@@ -36,9 +39,13 @@ const Home = () => {
     const winner = getWinner(gameMap);
 
     if (winner) {
-      gameWon(winner);
+      setTimeout(() => {
+        gameWon(winner);
+      }, 5000);
     } else {
-      checkTieState();
+      setTimeout(() => {
+        checkTieState();
+      }, 5000);
     }
 
     return () => {};
@@ -73,6 +80,8 @@ const Home = () => {
     Alert.alert('Hurray', `Player ${player.toUpperCase()} won`, [
       {text: 'Restart', onPress: onClickReset},
     ]);
+
+    triggerConfetti();
   };
 
   const getWinner = winnerMap => {
@@ -205,6 +214,14 @@ const Home = () => {
     }
   };
 
+  const triggerConfetti = () => {
+    confettiRef?.current?.startConfetti();
+
+    setTimeout(() => {
+      confettiRef?.current?.stopConfetti();
+    }, 5000);
+  };
+
   const copyMap = arr => {
     return JSON.parse(JSON.stringify(arr));
   };
@@ -231,6 +248,8 @@ const Home = () => {
         style={styles.backImg}
         source={require('../../assets/images/bg.jpeg')}
         resizeMode={'contain'}>
+        <Confetti ref={confettiRef} />
+
         <Text
           style={{
             fontSize: 24,
@@ -248,7 +267,12 @@ const Home = () => {
                 <Cell
                   cell={cell}
                   key={columnIndex}
-                  onPress={() => onPress(rowIndex, columnIndex)}
+                  onPress={() => {
+                    if (gameMode !== 'Local' && currentTurn === 'o') {
+                      return;
+                    }
+                    onPress(rowIndex, columnIndex);
+                  }}
                 />
               ))}
             </View>
